@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" type="image/x-icon">
-    <!-- RESPONSIVE VIEWPORT FIX -->
+    <!-- RESPONSIVE VIEWPORT -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -19,8 +19,6 @@
             --primary: #a855f7;
             --dark: #050505;
             --ply-color-main: #a855f7;
-            --safe-area-inset-top: env(safe-area-inset-top);
-            --safe-area-inset-bottom: env(safe-area-inset-bottom);
         }
         
         * {
@@ -34,30 +32,11 @@
             color: white; 
             margin: 0;
             padding: 0;
-            padding-top: var(--safe-area-inset-top);
-            padding-bottom: var(--safe-area-inset-bottom);
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* RESPONSIVE TYPOGRAPHY */
-        html {
-            font-size: 16px;
-        }
-        
-        @media (max-width: 640px) {
-            html {
-                font-size: 14px;
-            }
-        }
-        
-        @media (max-width: 360px) {
-            html {
-                font-size: 13px;
-            }
-        }
-
-        /* PLYR PLAYER FIXES FOR MOBILE */
+        /* PLYR PLAYER FIXES */
         .plyr {
             width: 100%;
             height: auto;
@@ -118,7 +97,7 @@
             }
         }
 
-        /* NAVIGATION FIXES */
+        /* NAVIGATION */
         .glass-nav {
             background: rgba(5, 5, 5, 0.98);
             backdrop-filter: blur(10px);
@@ -148,7 +127,7 @@
             }
         }
 
-        /* HAMBURGER MENU FIX */
+        /* HAMBURGER MENU - 3 LINES */
         .hamburger {
             width: 28px;
             height: 20px;
@@ -185,7 +164,7 @@
             top: 8px;
         }
 
-        /* SIDEBAR - FULL SCREEN ON MOBILE */
+        /* SIDEBAR - FIXED BACK ISSUE */
         #sidebar {
             position: fixed;
             top: 0;
@@ -222,7 +201,7 @@
         }
         .overlay.active { display: block; }
         
-        /* SIDEBAR CONTENT - RESPONSIVE */
+        /* SIDEBAR CONTENT */
         .sidebar-logo {
             width: 100px;
             height: 100px;
@@ -297,7 +276,7 @@
             }
         }
 
-        /* APP CARDS - RESPONSIVE */
+        /* APP CARDS - ORIGINAL ICONS */
         .app-card {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
@@ -353,7 +332,20 @@
             }
         }
 
-        /* ACTION BUTTONS - RESPONSIVE */
+        /* PLAYER ICONS - ORIGINAL COLORS */
+        .vlc-icon {
+            background: linear-gradient(135deg, #ff8800, #ff5500);
+        }
+        
+        .mx-icon {
+            background: linear-gradient(135deg, #00c853, #00b248);
+        }
+        
+        .playit-icon {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+        }
+
+        /* ACTION BUTTONS */
         .action-btn {
             background: linear-gradient(135deg, var(--primary), #7c3aed);
             border: none;
@@ -397,7 +389,7 @@
             background: linear-gradient(135deg, #3b82f6, #1d4ed8);
         }
 
-        /* MAIN CONTENT CONTAINER */
+        /* MAIN CONTENT */
         main {
             width: 100%;
             max-width: 1200px;
@@ -521,13 +513,6 @@
                 height: 50vh !important;
                 min-height: 300px;
             }
-            
-            .glass-nav {
-                padding-top: calc(0.75rem + var(--safe-area-inset-top));
-                padding-bottom: 0.75rem;
-                height: auto;
-                min-height: 60px;
-            }
         }
         
         /* PREMIUM BANNER */
@@ -572,8 +557,8 @@
 </head>
 <body>
 
-    <!-- Sidebar Overlay -->
-    <div class="overlay" onclick="toggleSidebar()"></div>
+    <!-- Sidebar Overlay - FIXED BACK ISSUE -->
+    <div class="overlay" id="overlay"></div>
 
     <!-- Sidebar -->
     <div id="sidebar">
@@ -632,7 +617,7 @@
     <!-- Navigation -->
     <nav class="glass-nav">
         <div class="flex items-center">
-            <div class="hamburger" onclick="toggleSidebar()">
+            <div class="hamburger" id="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -702,7 +687,7 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <!-- VLC Player -->
+                <!-- VLC Player - ORIGINAL ICON -->
                 <div class="app-card" onclick="openVLC()">
                     <div class="app-badge">FREE</div>
                     <div class="app-icon vlc-icon">
@@ -715,7 +700,7 @@
                     </div>
                 </div>
 
-                <!-- MX Player -->
+                <!-- MX Player - ORIGINAL ICON -->
                 <div class="app-card" onclick="openMXPlayer()">
                     <div class="app-badge">FREE</div>
                     <div class="app-icon mx-icon">
@@ -728,7 +713,7 @@
                     </div>
                 </div>
 
-                <!-- PlayIt -->
+                <!-- PlayIt - ORIGINAL ICON -->
                 <div class="app-card" onclick="openPlayIt()">
                     <div class="app-badge">FREE</div>
                     <div class="app-icon playit-icon">
@@ -785,7 +770,6 @@
 
     <!-- Scripts -->
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <script>
         // Configuration
@@ -831,22 +815,13 @@
                 console.error('Player error:', event.detail);
                 showToast('Playback error. Try downloading instead.', 'error');
             });
-            
-            // Handle waiting/buffering
-            player.on('waiting', function() {
-                console.log('Buffering...');
-            });
-            
-            player.on('canplay', function() {
-                console.log('Video can play');
-            });
         }
 
-        // Sidebar Functions
+        // FIXED: Sidebar Functions - Now properly closes on overlay click
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            const overlay = document.querySelector('.overlay');
-            const hamburger = document.querySelector('.hamburger');
+            const overlay = document.getElementById('overlay');
+            const hamburger = document.getElementById('hamburger');
             
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
@@ -967,18 +942,34 @@
         window.addEventListener('DOMContentLoaded', () => {
             initPlayer();
             
+            // Setup sidebar event listeners - FIXED
+            const hamburger = document.getElementById('hamburger');
+            const overlay = document.getElementById('overlay');
+            
+            hamburger.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', toggleSidebar);
+            
+            // Close sidebar when clicking on any link inside it
+            document.querySelectorAll('#sidebar a').forEach(link => {
+                link.addEventListener('click', () => {
+                    toggleSidebar();
+                });
+            });
+            
+            // Close sidebar on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar.classList.contains('active')) {
+                        toggleSidebar();
+                    }
+                }
+            });
+            
             // Show welcome message
             setTimeout(() => {
                 showToast('Welcome to DOTXBRAIN Streaming!', 'info');
             }, 1000);
-            
-            // Handle back button to close sidebar
-            window.addEventListener('popstate', function(event) {
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar.classList.contains('active')) {
-                    toggleSidebar();
-                }
-            });
         });
 
         // Handle page visibility for better buffering
@@ -988,11 +979,6 @@
                     player.pause();
                 }
             }
-        });
-        
-        // Close sidebar when clicking outside
-        document.querySelector('.overlay').addEventListener('click', function() {
-            toggleSidebar();
         });
     </script>
 </body>
