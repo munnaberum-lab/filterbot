@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" type="image/x-icon">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- RESPONSIVE VIEWPORT FIX -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>{{file_name}} | DOTXBRAIN Stream</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     
@@ -16,24 +19,71 @@
             --primary: #a855f7;
             --dark: #050505;
             --ply-color-main: #a855f7;
+            --safe-area-inset-top: env(safe-area-inset-top);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom);
+        }
+        
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body { 
             font-family: 'Outfit', sans-serif; 
             background: var(--dark); 
             color: white; 
+            margin: 0;
+            padding: 0;
+            padding-top: var(--safe-area-inset-top);
+            padding-bottom: var(--safe-area-inset-bottom);
+            min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Fix Plyr Play Button */
+        /* RESPONSIVE TYPOGRAPHY */
+        html {
+            font-size: 16px;
+        }
+        
+        @media (max-width: 640px) {
+            html {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            html {
+                font-size: 13px;
+            }
+        }
+
+        /* PLYR PLAYER FIXES FOR MOBILE */
+        .plyr {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16/9;
+            max-height: 70vh;
+        }
+        
         .plyr__video-wrapper {
             position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .plyr__video-wrapper video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain;
         }
         
         .plyr__control--overlaid {
             background: var(--primary) !important;
             border: 2px solid white;
             box-shadow: 0 0 30px rgba(168,85,247,0.8);
+            width: 60px !important;
+            height: 60px !important;
+            padding: 0 !important;
             display: flex !important;
             align-items: center;
             justify-content: center;
@@ -45,42 +95,66 @@
             height: 24px;
         }
         
-        /* Hide Volume */
-        .plyr__volume {
-            display: none !important;
-        }
-        
-        /* Proper Plyr controls */
+        /* BETTER MOBILE CONTROLS */
         .plyr__controls {
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 100%);
-            padding: 10px 20px 15px;
-            backdrop-filter: blur(5px);
+            padding: 8px 10px !important;
+            min-height: 50px !important;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 100%) !important;
         }
         
-        .plyr__time {
-            font-size: 13px;
-            font-weight: 500;
+        .plyr__controls__item {
+            margin: 0 4px !important;
         }
         
-        /* Navigation */
+        /* Hide volume on mobile */
+        @media (max-width: 768px) {
+            .plyr__volume {
+                display: none !important;
+            }
+            
+            .plyr__control--overlaid {
+                width: 50px !important;
+                height: 50px !important;
+            }
+        }
+
+        /* NAVIGATION FIXES */
         .glass-nav {
-            background: rgba(5, 5, 5, 0.95);
+            background: rgba(5, 5, 5, 0.98);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+            padding: 0.75rem 1rem;
+            height: 60px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         .brand-text {
             background: linear-gradient(to right, #fff, #a855f7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            font-size: 1.25rem;
+            font-weight: 900;
+        }
+        
+        @media (max-width: 360px) {
+            .brand-text {
+                font-size: 1.1rem;
+            }
         }
 
-        /* Hamburger Menu */
+        /* HAMBURGER MENU FIX */
         .hamburger {
-            width: 30px;
+            width: 28px;
             height: 20px;
             position: relative;
             cursor: pointer;
+            margin-right: 12px;
         }
         
         .hamburger span {
@@ -111,12 +185,13 @@
             top: 8px;
         }
 
-        /* Sidebar */
+        /* SIDEBAR - FULL SCREEN ON MOBILE */
         #sidebar {
             position: fixed;
             top: 0;
             left: -100%;
-            width: 320px;
+            width: 100%;
+            max-width: 320px;
             height: 100%;
             background: rgba(15, 15, 20, 0.98);
             backdrop-filter: blur(15px);
@@ -127,6 +202,12 @@
             display: flex;
             flex-direction: column;
             overflow-y: auto;
+        }
+        
+        @media (max-width: 640px) {
+            #sidebar {
+                max-width: 280px;
+            }
         }
         
         #sidebar.active { left: 0; }
@@ -141,19 +222,23 @@
         }
         .overlay.active { display: block; }
         
-        /* Sidebar Content */
-        .sidebar-content {
-            padding: 30px 20px;
-        }
-        
+        /* SIDEBAR CONTENT - RESPONSIVE */
         .sidebar-logo {
-            width: 140px;
-            height: 140px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             border: 3px solid var(--primary);
             box-shadow: 0 0 40px rgba(168,85,247,0.6);
             margin: 0 auto 25px;
             animation: pulse 3s infinite;
+            object-fit: cover;
+        }
+        
+        @media (max-width: 640px) {
+            .sidebar-logo {
+                width: 80px;
+                height: 80px;
+            }
         }
         
         @keyframes pulse {
@@ -161,142 +246,226 @@
             50% { transform: scale(1.05); }
         }
         
-        .sidebar-slogan {
-            font-size: 18px;
-            color: rgba(168,85,247,0.9);
-            text-align: center;
-            margin-bottom: 30px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 0 20px rgba(168,85,247,0.3);
-        }
-        
         .social-handles {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin: 40px 0;
+            gap: 12px;
+            margin: 30px 0;
         }
         
         .social-item {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 18px 20px;
+            gap: 12px;
+            padding: 14px 16px;
             background: rgba(255,255,255,0.05);
-            border-radius: 15px;
+            border-radius: 12px;
             transition: all 0.3s;
             border: 1px solid transparent;
             text-decoration: none;
+            width: 100%;
+        }
+        
+        @media (max-width: 640px) {
+            .social-item {
+                padding: 12px;
+            }
         }
         
         .social-item:hover {
             background: rgba(168,85,247,0.15);
             border-color: rgba(168,85,247,0.4);
-            transform: translateX(8px);
+            transform: translateX(5px);
         }
         
         .social-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        @media (max-width: 640px) {
+            .social-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+
+        /* APP CARDS - RESPONSIVE */
+        .app-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            padding: 1.25rem;
+            height: 100%;
+        }
+        
+        .app-card:hover {
+            transform: translateY(-3px);
+            background: rgba(168,85,247,0.1);
+            border-color: rgba(168,85,247,0.4);
+            box-shadow: 0 8px 20px rgba(168,85,247,0.2);
+        }
+        
+        .app-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .app-icon {
             width: 50px;
             height: 50px;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-        }
-        
-        .telegram-icon {
-            background: linear-gradient(135deg, rgba(0, 136, 204, 0.2), rgba(0, 86, 179, 0.2));
-            color: #0088cc;
-        }
-        
-        .youtube-icon {
-            background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(204, 0, 0, 0.2));
-            color: #ff0000;
-        }
-
-        /* App Cards */
-        .app-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 15px;
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .app-card:hover {
-            transform: translateY(-5px);
-            background: rgba(168,85,247,0.1);
-            border-color: rgba(168,85,247,0.4);
-            box-shadow: 0 10px 25px rgba(168,85,247,0.2);
-        }
-        
-        .app-badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: var(--primary);
-            color: white;
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-weight: bold;
-        }
-        
-        .app-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 28px;
+            margin: 0 auto 12px;
+            font-size: 22px;
             color: white;
         }
         
-        .vlc-icon {
-            background: linear-gradient(135deg, #ff8800, #ff5500);
-        }
-        
-        .mx-icon {
-            background: linear-gradient(135deg, #00c853, #00b248);
-        }
-        
-        .playit-icon {
-            background: linear-gradient(135deg, #2196f3, #1976d2);
+        @media (max-width: 640px) {
+            .app-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+            
+            .app-card {
+                padding: 1rem;
+            }
         }
 
-        /* Action Buttons */
+        /* ACTION BUTTONS - RESPONSIVE */
         .action-btn {
             background: linear-gradient(135deg, var(--primary), #7c3aed);
             border: none;
-            border-radius: 12px;
-            padding: 15px 25px;
-            font-weight: bold;
+            border-radius: 10px;
+            padding: 14px 20px;
+            font-weight: 600;
             color: white;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            font-size: 14px;
+            gap: 8px;
+            font-size: 0.9rem;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        @media (max-width: 640px) {
+            .action-btn {
+                padding: 12px 16px;
+                font-size: 0.85rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .action-btn {
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
         }
         
         .action-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(168,85,247,0.4);
+            box-shadow: 0 8px 16px rgba(168,85,247,0.4);
         }
         
         .share-btn {
             background: linear-gradient(135deg, #3b82f6, #1d4ed8);
         }
+
+        /* MAIN CONTENT CONTAINER */
+        main {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
         
-        /* Toast Notification */
+        @media (max-width: 768px) {
+            main {
+                padding: 0.75rem;
+            }
+        }
+
+        /* VIDEO PLAYER CONTAINER */
+        .video-container {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(168,85,247,0.3);
+            background: black;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        /* PLAYER WATERMARK */
+        .player-branding {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0.7;
+            pointer-events: none;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 8px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .player-branding img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+        
+        .player-branding span {
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* GRID SYSTEM */
+        .grid-responsive {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        
+        @media (max-width: 640px) {
+            .grid-responsive {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+        }
+
+        /* TOAST NOTIFICATION */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -305,14 +474,16 @@
             background: rgba(0,0,0,0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(168,85,247,0.5);
-            border-radius: 12px;
-            padding: 15px 25px;
+            border-radius: 10px;
+            padding: 12px 20px;
             z-index: 10000;
             opacity: 0;
             transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 90%;
+            width: auto;
+            min-width: 250px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            text-align: center;
         }
         
         .toast.show {
@@ -320,19 +491,19 @@
             opacity: 1;
         }
         
-        /* Loading/Buffering Spinner */
-        .plyr--buffering .plyr__control--overlaid {
+        /* LOADING SPINNER */
+        .plyr--loading .plyr__control--overlaid {
             display: none !important;
         }
         
-        .plyr--buffering::after {
+        .plyr--loading::after {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border: 3px solid rgba(255,255,255,0.1);
             border-top-color: var(--primary);
             border-radius: 50%;
@@ -344,41 +515,58 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
-        /* Player Watermark */
-        .player-branding {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            opacity: 0.7;
-            pointer-events: none;
+        /* FIX FOR IOS SAFARI */
+        @supports (-webkit-touch-callout: none) {
+            .plyr__video-wrapper {
+                height: 50vh !important;
+                min-height: 300px;
+            }
+            
+            .glass-nav {
+                padding-top: calc(0.75rem + var(--safe-area-inset-top));
+                padding-bottom: 0.75rem;
+                height: auto;
+                min-height: 60px;
+            }
         }
         
-        /* Premium Banner */
+        /* PREMIUM BANNER */
         .premium-banner {
             background: linear-gradient(135deg, rgba(168,85,247,0.15) 0%, rgba(0,0,0,0.5) 100%);
             border: 1px solid rgba(168,85,247,0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
             position: relative;
             overflow: hidden;
         }
         
-        .premium-banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: shine 3s infinite;
+        @media (max-width: 640px) {
+            .premium-banner {
+                padding: 1rem;
+                margin: 1rem 0;
+            }
         }
         
-        @keyframes shine {
-            0% { left: -100%; }
-            100% { left: 100%; }
+        /* UTILITY CLASSES */
+        .text-truncate {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .w-full {
+            width: 100%;
+        }
+        
+        .h-full {
+            height: 100%;
         }
     </style>
 </head>
@@ -389,200 +577,199 @@
 
     <!-- Sidebar -->
     <div id="sidebar">
-        <div class="sidebar-content">
+        <div class="sidebar-content p-4 md:p-6">
             <!-- Logo -->
             <img src="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" class="sidebar-logo">
             
             <!-- Slogan -->
-            <div class="sidebar-slogan">
-                <i class="fas fa-rocket"></i> STREAM WITHOUT LIMITS
+            <div class="sidebar-slogan text-center mb-6">
+                <i class="fas fa-rocket text-purple-500 mr-2"></i> 
+                <span class="text-lg font-bold text-purple-400">STREAM WITHOUT LIMITS</span>
             </div>
             
             <!-- Social Handles -->
             <div class="social-handles">
-                <a href="https://t.me/dotxbrain_official" class="social-item">
+                <a href="https://t.me/dotxbrain_official" target="_blank" class="social-item">
                     <div class="social-icon telegram-icon">
                         <i class="fab fa-telegram-plane"></i>
                     </div>
-                    <div>
-                        <div class="font-bold text-lg">Telegram Channel</div>
-                        <div class="text-sm text-gray-300 mt-1">@dotxbrain_official</div>
-                        <div class="text-xs text-gray-400 mt-1">Join our official community</div>
+                    <div class="flex-1">
+                        <div class="font-bold text-base">Telegram Channel</div>
+                        <div class="text-xs text-gray-300 mt-1">@dotxbrain_official</div>
                     </div>
+                    <i class="fas fa-external-link-alt text-gray-400"></i>
                 </a>
                 
-                <a href="https://youtube.com/@dotxbrain" class="social-item">
+                <a href="https://youtube.com/@dotxbrain" target="_blank" class="social-item">
                     <div class="social-icon youtube-icon">
                         <i class="fab fa-youtube"></i>
                     </div>
-                    <div>
-                        <div class="font-bold text-lg">YouTube Hub</div>
-                        <div class="text-sm text-gray-300 mt-1">@dotxbrain</div>
-                        <div class="text-xs text-gray-400 mt-1">Subscribe for latest content</div>
+                    <div class="flex-1">
+                        <div class="font-bold text-base">YouTube Hub</div>
+                        <div class="text-xs text-gray-300 mt-1">@dotxbrain</div>
                     </div>
+                    <i class="fas fa-external-link-alt text-gray-400"></i>
                 </a>
             </div>
             
             <!-- Premium Info -->
-            <div class="p-6 rounded-xl bg-gradient-to-r from-purple-900/30 to-transparent border border-purple-500/30">
-                <h4 class="font-bold text-white text-xl mb-2">DOTXBRAIN PREMIUM</h4>
+            <div class="p-4 rounded-xl bg-gradient-to-r from-purple-900/30 to-transparent border border-purple-500/30 mt-4">
+                <h4 class="font-bold text-white text-lg mb-2">DOTXBRAIN PREMIUM</h4>
                 <p class="text-sm text-gray-300 mb-4">Join VIP for exclusive content, ad-free streaming, and highest quality.</p>
-                <a href="https://t.me/dotxbrain_official" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                <a href="https://t.me/dotxbrain_official" target="_blank" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex-center">
                     <i class="fas fa-crown mr-2"></i>JOIN NOW
                 </a>
             </div>
         </div>
         
         <!-- Footer -->
-        <div class="p-5 text-center text-gray-500 border-t border-gray-800 mt-auto">
+        <div class="p-4 text-center text-gray-500 border-t border-gray-800 mt-auto">
             <div class="text-xs mb-2">v2.6.0 • Ultra Stream</div>
             <div class="text-[10px] text-gray-600">Powered by DOTXBRAIN Servers</div>
         </div>
     </div>
 
     <!-- Navigation -->
-    <nav class="glass-nav sticky top-0 z-50 px-5 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-4">
+    <nav class="glass-nav">
+        <div class="flex items-center">
             <div class="hamburger" onclick="toggleSidebar()">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
             
-            <div class="flex items-center gap-3">
-                <img src="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" class="w-10 h-10 rounded-full border-2 border-purple-500">
-                <span class="text-xl font-black brand-text">DOTXBRAIN</span>
+            <div class="flex items-center gap-2">
+                <img src="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" class="w-8 h-8 rounded-full border-2 border-purple-500">
+                <span class="brand-text">DOTXBRAIN</span>
             </div>
         </div>
 
-        <a href="https://t.me/dotxbrain_official" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-5 py-2.5 rounded-full font-bold shadow-lg transition duration-300">
-            <i class="fas fa-crown mr-2"></i> JOIN VIP
+        <a href="https://t.me/dotxbrain_official" target="_blank" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-3 py-2 rounded-full font-bold text-sm shadow-lg transition duration-300 whitespace-nowrap">
+            <i class="fas fa-crown mr-1"></i> JOIN VIP
         </a>
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-5xl mx-auto px-4 py-6">
+    <main>
         
         <!-- Video Title -->
-        <div class="mb-6">
-            <h1 class="text-xl md:text-2xl font-bold text-gray-100 mb-2">{{file_name}}</h1>
-            <div class="flex items-center gap-4 flex-wrap">
-                <span class="text-xs text-purple-400 font-bold uppercase tracking-widest">
-                    <i class="fas fa-bolt mr-1"></i> HIGH SPEED STREAM
+        <div class="mb-4">
+            <h1 class="text-lg md:text-xl font-bold text-gray-100 mb-2 text-truncate">{{file_name}}</h1>
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-xs text-purple-400 font-bold px-2 py-1 bg-purple-900/30 rounded">
+                    <i class="fas fa-bolt mr-1"></i> HIGH SPEED
                 </span>
-                <span class="text-xs text-green-400 font-bold flex items-center gap-1">
-                    <i class="fas fa-circle text-xs"></i> LIVE
+                <span class="text-xs text-green-400 font-bold px-2 py-1 bg-green-900/30 rounded flex items-center gap-1">
+                    <i class="fas fa-circle text-[8px]"></i> LIVE
                 </span>
             </div>
         </div>
 
         <!-- Video Player -->
-        <div class="relative rounded-2xl overflow-hidden border border-purple-900/50 shadow-2xl bg-black mb-8">
+        <div class="video-container">
             <!-- Player Watermark -->
             <div class="player-branding">
-                <img src="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" class="w-8 h-8 rounded-full">
-                <span class="text-xs font-bold text-white/80">DOTXBRAIN</span>
+                <img src="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png">
+                <span>DOTXBRAIN</span>
             </div>
             
             <!-- Video Element -->
-            <video id="player" playsinline>
+            <video id="player" playsinline controls>
                 <source src="{{file_url}}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </div>
 
         <!-- Action Buttons -->
-        <div class="flex flex-col sm:flex-row gap-3 mb-10">
-            <button id="downloadBtn" class="action-btn flex-1">
+        <div class="flex flex-col sm:flex-row gap-3 mb-6">
+            <button id="downloadBtn" class="action-btn">
                 <i class="fas fa-download"></i>
                 DOWNLOAD VIDEO
             </button>
-            <button id="shareBtn" class="action-btn share-btn flex-1">
+            <button id="shareBtn" class="action-btn share-btn">
                 <i class="fas fa-share-alt"></i>
                 SHARE VIDEO
             </button>
         </div>
 
         <!-- Open in App Section -->
-        <div class="mb-12">
-            <div class="flex items-center justify-between mb-8">
-                <h2 class="text-sm font-bold text-gray-300 uppercase tracking-widest">
+        <div class="mb-8">
+            <div class="flex items-center mb-4">
+                <h2 class="text-sm font-bold text-gray-300 uppercase tracking-widest flex items-center">
                     <i class="fas fa-external-link-alt mr-2"></i> OPEN IN APP
                 </h2>
-                <div class="h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent flex-1 ml-4"></div>
+                <div class="h-px bg-gradient-to-r from-purple-500/30 via-purple-500/30 to-transparent flex-1 ml-3"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <!-- VLC Player -->
-                <div class="app-card p-6 text-center" onclick="openVLC()">
+                <div class="app-card" onclick="openVLC()">
                     <div class="app-badge">FREE</div>
                     <div class="app-icon vlc-icon">
                         <i class="fas fa-play-circle"></i>
                     </div>
-                    <h3 class="font-bold text-white text-lg mb-2">VLC Player</h3>
-                    <p class="text-sm text-gray-400 mb-4">Universal Media Player</p>
+                    <h3 class="font-bold text-white text-base mb-1">VLC Player</h3>
+                    <p class="text-xs text-gray-400 mb-2">Universal Media Player</p>
                     <div class="text-xs text-orange-400 font-medium">
-                        <i class="fas fa-star mr-1"></i> Best Quality Support
+                        <i class="fas fa-star mr-1"></i> Best Quality
                     </div>
                 </div>
 
                 <!-- MX Player -->
-                <div class="app-card p-6 text-center" onclick="openMXPlayer()">
+                <div class="app-card" onclick="openMXPlayer()">
                     <div class="app-badge">FREE</div>
                     <div class="app-icon mx-icon">
                         <i class="fas fa-play"></i>
                     </div>
-                    <h3 class="font-bold text-white text-lg mb-2">MX Player</h3>
-                    <p class="text-sm text-gray-400 mb-4">Android Media Player</p>
+                    <h3 class="font-bold text-white text-base mb-1">MX Player</h3>
+                    <p class="text-xs text-gray-400 mb-2">Android Media Player</p>
                     <div class="text-xs text-green-400 font-medium">
-                        <i class="fas fa-trophy mr-1"></i> Top Rated App
+                        <i class="fas fa-trophy mr-1"></i> Top Rated
                     </div>
                 </div>
 
                 <!-- PlayIt -->
-                <div class="app-card p-6 text-center" onclick="openPlayIt()">
+                <div class="app-card" onclick="openPlayIt()">
                     <div class="app-badge">FREE</div>
                     <div class="app-icon playit-icon">
                         <i class="fas fa-bolt"></i>
                     </div>
-                    <h3 class="font-bold text-white text-lg mb-2">PlayIt</h3>
-                    <p class="text-sm text-gray-400 mb-4">Streaming Player</p>
+                    <h3 class="font-bold text-white text-base mb-1">PlayIt</h3>
+                    <p class="text-xs text-gray-400 mb-2">Streaming Player</p>
                     <div class="text-xs text-blue-400 font-medium">
                         <i class="fas fa-bolt mr-1"></i> Fast Streaming
                     </div>
                 </div>
             </div>
 
-            <p class="text-xs text-gray-500 text-center mt-6 px-4">
+            <p class="text-xs text-gray-500 text-center mt-4 px-2">
                 <i class="fas fa-info-circle mr-1"></i>
-                Click any player to open video directly in that app. If app is not installed, you'll be redirected to download.
+                Click any player to open video directly in that app.
             </p>
         </div>
 
         <!-- Premium Banner -->
-        <div class="premium-banner p-8 rounded-2xl text-center mb-8">
-            <div class="relative z-10">
-                <h3 class="text-2xl font-black text-white mb-4">DOTXBRAIN PREMIUM</h3>
-                <p class="text-gray-300 mb-6">Join the largest streaming community today. Get exclusive content and ad-free experience.</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="https://t.me/dotxbrain_official" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 rounded-lg font-bold transition duration-300">
-                        <i class="fab fa-telegram-plane mr-2"></i> Join Telegram
-                    </a>
-                    <a href="https://youtube.com/@dotxbrain" class="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-8 py-3 rounded-lg font-bold transition duration-300">
-                        <i class="fab fa-youtube mr-2"></i> Subscribe YouTube
-                    </a>
-                </div>
+        <div class="premium-banner text-center">
+            <h3 class="text-lg md:text-xl font-black text-white mb-3">DOTXBRAIN PREMIUM</h3>
+            <p class="text-sm text-gray-300 mb-4">Join the largest streaming community today. Get exclusive content and ad-free experience.</p>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <a href="https://t.me/dotxbrain_official" target="_blank" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition duration-300">
+                    <i class="fab fa-telegram-plane mr-2"></i> Join Telegram
+                </a>
+                <a href="https://youtube.com/@dotxbrain" target="_blank" class="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition duration-300">
+                    <i class="fab fa-youtube mr-2"></i> Subscribe YouTube
+                </a>
             </div>
         </div>
 
     </main>
 
     <!-- Footer -->
-    <footer class="py-8 text-center text-gray-500 border-t border-gray-900">
-        <div class="flex flex-col items-center gap-3">
+    <footer class="py-6 text-center text-gray-500 border-t border-gray-900">
+        <div class="flex flex-col items-center gap-2">
             <div class="flex items-center gap-2">
                 <i class="fas fa-server text-purple-500"></i>
-                <span class="text-sm">Powered by DOTXBRAIN Servers</span>
+                <span class="text-xs">Powered by DOTXBRAIN Servers</span>
             </div>
             <div class="text-xs">Ultra Fast Streaming • v2.6.0</div>
         </div>
@@ -590,7 +777,7 @@
 
     <!-- Toast Notification -->
     <div id="toast" class="toast">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center justify-center gap-3">
             <i class="fas fa-check-circle text-green-400 text-lg"></i>
             <div class="text-sm" id="toast-message">Operation completed</div>
         </div>
@@ -605,63 +792,19 @@
         const source = "{{file_url}}";
         const fileName = "{{file_name}}";
         let player;
-        let hls;
         
         // Initialize Plyr Player
         function initPlayer() {
             const video = document.getElementById('player');
             
-            // Initialize HLS if needed
-            if (Hls.isSupported() && (source.includes('.m3u8') || source.includes('hls') || source.includes('stream'))) {
-                hls = new Hls({
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    backBufferLength: 90,
-                    debug: false
-                });
-                
-                hls.loadSource(source);
-                hls.attachMedia(video);
-                
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    console.log('HLS manifest parsed successfully');
-                });
-                
-                hls.on(Hls.Events.ERROR, function(event, data) {
-                    console.error('HLS Error:', data);
-                    if (data.fatal) {
-                        switch(data.type) {
-                            case Hls.ErrorTypes.NETWORK_ERROR:
-                                showToast('Network error. Recovering...', 'warning');
-                                hls.startLoad();
-                                break;
-                            case Hls.ErrorTypes.MEDIA_ERROR:
-                                showToast('Media error. Attempting recovery...', 'warning');
-                                hls.recoverMediaError();
-                                break;
-                            default:
-                                hls.destroy();
-                                video.src = source;
-                                break;
-                        }
-                    }
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Safari native HLS support
-                video.src = source;
-            } else {
-                video.src = source;
-            }
-            
-            // Initialize Plyr
+            // Initialize Plyr with mobile-friendly settings
             player = new Plyr('#player', {
                 controls: [
-                    'play-large', // Single play button in center
+                    'play-large',
                     'play',
                     'progress',
                     'current-time',
                     'mute',
-                    'volume',
                     'settings',
                     'fullscreen'
                 ],
@@ -670,21 +813,32 @@
                 keyboard: { focused: true, global: true },
                 tooltips: { controls: true, seek: true },
                 debug: false,
-                fullscreen: { enabled: true, fallback: true, iosNative: true }
+                fullscreen: { enabled: true, fallback: true, iosNative: true },
+                ratio: '16:9',
+                autoplay: false,
+                clickToPlay: true,
+                disableContextMenu: false,
+                hideControls: true,
+                resetOnEnd: false,
+                seekTime: 10
             });
             
-            // Buffering events
-            player.on('waiting', function() {
-                showToast('Buffering video...', 'info');
-            });
+            // Set source
+            video.src = source;
             
-            player.on('playing', function() {
-                // Buffering complete
-            });
-            
+            // Handle errors
             player.on('error', function(event) {
                 console.error('Player error:', event.detail);
                 showToast('Playback error. Try downloading instead.', 'error');
+            });
+            
+            // Handle waiting/buffering
+            player.on('waiting', function() {
+                console.log('Buffering...');
+            });
+            
+            player.on('canplay', function() {
+                console.log('Video can play');
             });
         }
 
@@ -697,6 +851,13 @@
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
             hamburger.classList.toggle('active');
+            
+            // Prevent body scroll when sidebar is open
+            if (sidebar.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
         }
 
         // Toast Notification
@@ -765,110 +926,41 @@
             const vlcUrl = `vlc://${source}`;
             const playStoreUrl = 'https://play.google.com/store/apps/details?id=org.videolan.vlc';
             
-            // Try to open VLC
             window.location.href = vlcUrl;
             
-            // If VLC is not installed, redirect to Play Store after delay
             setTimeout(() => {
                 if (document.hasFocus()) {
-                    showToast('Opening VLC Player...', 'info');
-                } else {
-                    setTimeout(() => {
-                        if (document.hasFocus()) {
-                            showToast('VLC not found. Opening Play Store...', 'warning');
-                            window.open(playStoreUrl, '_blank');
-                        }
-                    }, 1000);
+                    window.open(playStoreUrl, '_blank');
                 }
             }, 500);
         }
 
-        // Open MX Player - CORRECTED METHOD
+        // Open MX Player
         function openMXPlayer() {
-            // Correct MX Player intent format
             const mxIntent = `intent:${source}#Intent;package=com.mxtech.videoplayer.ad;S.title=${encodeURIComponent(fileName)};type=video/*;end`;
-            const mxIntentPro = `intent:${source}#Intent;package=com.mxtech.videoplayer.pro;S.title=${encodeURIComponent(fileName)};type=video/*;end`;
             const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.mxtech.videoplayer.ad';
             
-            // Try Pro version first
-            try {
-                window.location.href = mxIntentPro;
-            } catch (e) {
-                console.log('Error opening MX Player Pro:', e);
-            }
+            window.location.href = mxIntent;
             
-            // Check if app opened
             setTimeout(() => {
                 if (document.hasFocus()) {
-                    // Try Free version
-                    try {
-                        window.location.href = mxIntent;
-                    } catch (e) {
-                        console.log('Error opening MX Player:', e);
-                    }
-                    
-                    setTimeout(() => {
-                        if (document.hasFocus()) {
-                            showToast('Opening MX Player...', 'info');
-                        } else {
-                            setTimeout(() => {
-                                if (document.hasFocus()) {
-                                    showToast('MX Player not found. Opening Play Store...', 'warning');
-                                    window.open(playStoreUrl, '_blank');
-                                }
-                            }, 1000);
-                        }
-                    }, 500);
-                } else {
-                    showToast('Opening MX Player...', 'success');
+                    window.open(playStoreUrl, '_blank');
                 }
             }, 500);
         }
 
-        // Open PlayIt - CORRECTED METHOD
+        // Open PlayIt
         function openPlayIt() {
-            // Correct PlayIt URL format
             const playitUrl = `playit://playerv2/video?url=${encodeURIComponent(source)}&title=${encodeURIComponent(fileName)}`;
             const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.playit.gg';
             
-            try {
-                window.location.href = playitUrl;
-            } catch (e) {
-                console.log('Error opening PlayIt:', e);
-            }
+            window.location.href = playitUrl;
             
             setTimeout(() => {
                 if (document.hasFocus()) {
-                    showToast('Opening PlayIt Player...', 'info');
-                } else {
-                    setTimeout(() => {
-                        if (document.hasFocus()) {
-                            showToast('PlayIt not found. Opening Play Store...', 'warning');
-                            window.open(playStoreUrl, '_blank');
-                        }
-                    }, 1000);
+                    window.open(playStoreUrl, '_blank');
                 }
             }, 500);
-        }
-
-        // Alternative method using iframe for app detection
-        function openAppWithFallback(appUrl, fallbackUrl, appName) {
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = appUrl;
-            document.body.appendChild(iframe);
-            
-            setTimeout(() => {
-                document.body.removeChild(iframe);
-                setTimeout(() => {
-                    if (document.hasFocus()) {
-                        showToast(`${appName} not found. Opening Play Store...`, 'warning');
-                        window.open(fallbackUrl, '_blank');
-                    } else {
-                        showToast(`Opening ${appName}...`, 'success');
-                    }
-                }, 1000);
-            }, 2000);
         }
 
         // Initialize everything when page loads
@@ -880,16 +972,11 @@
                 showToast('Welcome to DOTXBRAIN Streaming!', 'info');
             }, 1000);
             
-            // Detect if app opened
-            let appOpened = false;
-            window.addEventListener('blur', () => {
-                appOpened = true;
-            });
-            
-            window.addEventListener('focus', () => {
-                if (appOpened) {
-                    showToast('Returned from external player', 'info');
-                    appOpened = false;
+            // Handle back button to close sidebar
+            window.addEventListener('popstate', function(event) {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar.classList.contains('active')) {
+                    toggleSidebar();
                 }
             });
         });
@@ -897,11 +984,15 @@
         // Handle page visibility for better buffering
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
-                // Page is hidden, pause video
                 if (player && player.playing) {
                     player.pause();
                 }
             }
+        });
+        
+        // Close sidebar when clicking outside
+        document.querySelector('.overlay').addEventListener('click', function() {
+            toggleSidebar();
         });
     </script>
 </body>
