@@ -2,136 +2,169 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon" href="https://envs.sh/E9C.jpg" type="image/x-icon">
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{file_name}} | DOTXBRAIN</title>
+    <title>DOTXBRAIN | Premium Stream</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     
     <style>
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: #000; 
-            color: white; 
-            overflow-x: hidden;
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: white; overflow-x: hidden; }
+        
+        /* Video Internal Loader */
+        .video-container { position: relative; background: #000; border-radius: 20px; overflow: hidden; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .video-loader {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.8); z-index: 10;
         }
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.05); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
+        .spinner {
+            width: 50px; height: 50px; border: 4px solid rgba(168, 85, 247, 0.1);
+            border-left-color: #a855f7; border-radius: 50%; animation: spin 1s linear infinite;
         }
-        .neon-glow {
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Sidebar Styling */
+        #sidebar {
+            position: fixed; top: 0; left: -320px; width: 300px; height: 100%;
+            background: linear-gradient(180deg, #111 0%, #000 100%); z-index: 100;
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 2px solid #a855f7;
         }
-        .player-tile {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .player-tile:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.1);
-        }
+        #sidebar.active { left: 0; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 90; backdrop-filter: blur(4px); }
+        .overlay.active { display: block; }
+
+        /* Premium Glows */
+        .neon-border { border: 1px solid rgba(168, 85, 247, 0.4); box-shadow: 0 0 15px rgba(168, 85, 247, 0.1); }
+        .brand-gradient { background: linear-gradient(90deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* App Buttons */
+        .app-card { background: rgba(255,255,255,0.03); transition: 0.3s; border: 1px solid rgba(255,255,255,0.05); }
+        .app-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); border-color: rgba(168, 85, 247, 0.5); }
     </style>
 </head>
-<body class="bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-purple-900/20 via-black to-black min-h-screen">
+<body>
 
-    <nav class="sticky top-0 z-50 px-6 py-4 flex justify-between items-center bg-black/50 backdrop-blur-lg border-b border-white/10">
-        <div class="flex items-center gap-3">
-            <img src="https://envs.sh/E9C.jpg" class="w-10 h-10 rounded-xl neon-glow" alt="Logo">
-            <span class="text-xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">DOTXBRAIN</span>
+    <div class="overlay" onclick="toggleSidebar()"></div>
+
+    <div id="sidebar" class="p-6 flex flex-col">
+        <div class="mb-10 text-center">
+            <img src="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-purple-500 p-1">
+            <h2 class="text-2xl font-extrabold brand-gradient">DOTXBRAIN</h2>
+            <p class="text-[10px] text-gray-500 tracking-tighter italic">"Your Gateway to Unlimited Entertainment"</p>
         </div>
-        <a href="https://t.me/dotxbrain_official" class="bg-white text-black px-5 py-2 rounded-full text-xs font-bold hover:bg-purple-500 hover:text-white transition-all">Updates</a>
+
+        <nav class="space-y-3 flex-1">
+            <a href="https://youtube.com/@dotxbrain" target="_blank" class="flex items-center gap-4 p-4 rounded-2xl bg-red-600/10 border border-red-600/20 hover:bg-red-600/20 transition-all group">
+                <i class="fab fa-youtube text-red-600 text-xl group-hover:scale-120"></i>
+                <span class="font-bold">YouTube Hub</span>
+            </a>
+            <a href="https://t.me/dotxbrain_official" target="_blank" class="flex items-center gap-4 p-4 rounded-2xl bg-blue-600/10 border border-blue-600/20 hover:bg-blue-600/20 transition-all group">
+                <i class="fab fa-telegram text-blue-500 text-xl group-hover:scale-120"></i>
+                <span class="font-bold">Telegram Channel</span>
+            </a>
+            <a href="https://instagram.com/dotxbrain" class="flex items-center gap-4 p-4 rounded-2xl bg-pink-600/10 border border-pink-600/20 hover:bg-pink-600/20 transition-all group">
+                <i class="fab fa-instagram text-pink-500 text-xl group-hover:scale-120"></i>
+                <span class="font-bold">Instagram</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto pt-6 border-t border-white/5 text-center">
+            <p class="text-[10px] text-gray-600 uppercase font-black">Design by DotxBrain Team</p>
+        </div>
+    </div>
+
+    <nav class="px-6 py-4 flex justify-between items-center bg-black/40 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="toggleSidebar()">
+            <img src="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" class="w-10 h-10 rounded-full shadow-lg shadow-purple-500/20">
+            <div class="leading-none">
+                <span class="text-xl font-black brand-gradient block">DOTXBRAIN</span>
+                <span class="text-[8px] text-gray-500 tracking-[0.2em] font-bold">PREMIUM STREAM</span>
+            </div>
+        </div>
+        <button onclick="toggleSidebar()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-purple-600/20 transition-all">
+            <i class="fas fa-bars text-purple-400"></i>
+        </button>
     </nav>
 
-    <main class="max-w-4xl mx-auto px-4 py-8">
-        <div class="glass-card overflow-hidden animate__animated animate__fadeIn">
-            <div class="p-5 border-b border-white/10 bg-white/5">
-                <h1 class="text-sm font-medium text-gray-400 truncate">{{file_name}}</h1>
+    <main class="max-w-5xl mx-auto p-4 sm:p-8">
+        <div class="mb-6 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="px-3 py-1 bg-purple-600 text-[10px] font-black rounded-md uppercase">4K Ready</span>
+                <span class="text-gray-500 text-xs font-bold uppercase tracking-widest">Now Playing</span>
             </div>
-            
-            <div class="aspect-video bg-black relative">
-                <video id="player" playsinline controls class="w-full h-full">
-                    <source src="{{file_url}}" type="video/mp4">
-                </video>
-            </div>
+            <p class="text-purple-400 text-xs font-bold">#DotxBrainOfficial</p>
         </div>
 
-        <div class="mt-10">
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-                <span class="w-2 h-8 bg-purple-500 rounded-full"></span>
-                Play with External Player
-            </h2>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 animate__animated animate__fadeInUp">
-                <div onclick="vlc_player()" class="glass-card p-6 flex flex-col items-center gap-3 cursor-pointer player-tile">
-                    <img src="https://cdn-icons-png.flaticon.com/512/732/732254.png" class="w-12 h-12" alt="VLC">
-                    <span class="font-semibold text-sm">VLC Player</span>
+        <div class="video-container shadow-2xl">
+            <div id="v-loader" class="video-loader">
+                <div class="text-center">
+                    <div class="spinner mx-auto mb-3"></div>
+                    <p class="text-[10px] font-black tracking-widest text-purple-400">OPTIMIZING STREAM...</p>
                 </div>
+            </div>
+            <video id="player" playsinline controls class="w-full h-full"></video>
+        </div>
 
-                <div onclick="mx_player()" class="glass-card p-6 flex flex-col items-center gap-3 cursor-pointer player-tile">
-                    <img src="https://cdn-icons-png.flaticon.com/512/5969/5969186.png" class="w-12 h-12" alt="MX">
-                    <span class="font-semibold text-sm">MX Player</span>
+        <h1 id="v-title" class="mt-6 text-xl font-extrabold text-gray-200 line-clamp-2 leading-tight">Loading File Name...</h1>
+
+        <div class="mt-12">
+            <h2 class="text-sm font-black text-gray-500 mb-6 uppercase tracking-[0.3em] text-center italic">Fast External Playback</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div onclick="vlc_player()" class="app-card p-6 rounded-3xl flex flex-col items-center gap-4 cursor-pointer">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e6/VLC_Icon.svg" class="w-14 h-14" alt="VLC">
+                    <span class="text-xs font-black text-orange-500">VLC MEDIA</span>
                 </div>
-
-                <div onclick="playit_player()" class="glass-card p-6 flex flex-col items-center gap-3 cursor-pointer player-tile">
-                    <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center font-bold">P</div>
-                    <span class="font-semibold text-sm">PlayIt</span>
+                <div onclick="mx_player()" class="app-card p-6 rounded-3xl flex flex-col items-center gap-4 cursor-pointer">
+                    <img src="https://envs.sh/ERv.png" class="w-14 h-14 rounded-2xl" alt="MX">
+                    <span class="text-xs font-black text-blue-500">MX PLAYER</span>
                 </div>
-
-                <div onclick="s_player()" class="glass-card p-6 flex flex-col items-center gap-3 cursor-pointer player-tile">
-                    <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center font-bold">S</div>
-                    <span class="font-semibold text-sm">S Player</span>
-                </div>
-
-                <div onclick="km_player()" class="glass-card p-6 flex flex-col items-center gap-3 cursor-pointer player-tile">
-                    <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center font-bold">KM</div>
-                    <span class="font-semibold text-sm">KM Player</span>
-                </div>
-
-                <div onclick="hd_player()" class="glass-card p-6 flex flex-col items-center gap-3 cursor-pointer player-tile">
-                    <div class="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center font-bold">HD</div>
-                    <span class="font-semibold text-sm">HD Player</span>
+                <div onclick="playit_player()" class="app-card p-6 rounded-3xl flex flex-col items-center gap-4 cursor-pointer">
+                    <img src="https://envs.sh/ER6.png" class="w-14 h-14 rounded-2xl" alt="PlayIt">
+                    <span class="text-xs font-black text-teal-400">PLAYIT NOW</span>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="mt-20 py-10 text-center border-t border-white/5">
-        <p class="text-gray-500 text-xs tracking-widest uppercase">Made with ❤️ by</p>
-        <h3 class="text-lg font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-500">DOTXBRAIN</h3>
+    <footer class="py-12 border-t border-white/5 bg-black/50 text-center">
+        <h2 class="text-3xl font-black opacity-10 mb-2">DOTXBRAIN</h2>
+        <p class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Unlimited Cloud Streaming &copy; 2026</p>
     </footer>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <script>
-        const video = document.getElementById('player');
-        const source = "{{file_url}}";
-        const Link = "{{file_url}}";
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.querySelector('.overlay').classList.toggle('active');
+        }
 
-        // HLS Support: Fixing video not playing issue in browsers
+        const params = new URLSearchParams(window.location.search);
+        const source = params.get('url') || "";
+        const name = params.get('name') || "Untitled Content";
+        document.getElementById('v-title').innerText = name;
+
+        const video = document.getElementById('player');
         if (Hls.isSupported() && (source.includes('.m3u8') || source.includes('stream'))) {
             const hls = new Hls();
             hls.loadSource(source);
             hls.attachMedia(video);
-        }
+        } else { video.src = source; }
 
-        // Initialize Player
         const player = new Plyr('#player', {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
-            tooltips: { controls: true, seek: true }
+            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen']
         });
 
-        // Intent Link Functions
-        function vlc_player() { window.location.href = `vlc://${Link}`; }
-        function mx_player() { window.location.href = `intent:${Link}#Intent;package=com.mxtech.videoplayer.ad;end`; }
-        function playit_player() { window.location.href = `playit://playerv2/video?url=${Link}`; }
-        function s_player() { window.location.href = `intent:${Link}#Intent;action=com.young.simple.player.playback_online;package=com.young.simple.player;end`; }
-        function km_player() { window.location.href = `intent:${Link}#Intent;package=com.kmplayer;end`; }
-        function hd_player() { window.location.href = `intent:${Link}#Intent;package=uplayer.video.player;end`; }
+        // Smart Loader: Video ready hote hi spinner gayab
+        video.oncanplay = () => { document.getElementById('v-loader').style.display = 'none'; };
+
+        function vlc_player() { window.location.href = `vlc://${source}`; }
+        function mx_player() { window.location.href = `intent:${source}#Intent;package=com.mxtech.videoplayer.ad;end`; }
+        function playit_player() { window.location.href = `playit://playerv2/video?url=${source}`; }
     </script>
 </body>
 </html>
