@@ -3,159 +3,530 @@
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" type="image/x-icon">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download | DOTXBRAIN</title>
+    <meta property="og:image" content="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" itemprop="thumbnailUrl">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>{{file_name}} - Download | DOTXBRAIN</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: white; overflow-x: hidden; }
+        :root {
+            --primary: #a855f7;
+            --dark: #050505;
+        }
         
-        /* Video Loader */
-        .video-container { position: relative; background: #000; border-radius: 20px; overflow: hidden; border: 1px solid rgba(168, 85, 247, 0.3); }
-        .video-loader {
-            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.8); z-index: 10;
+        body {
+            background: var(--dark);
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            overflow-x: hidden;
         }
-        .spinner {
-            width: 40px; height: 40px; border: 3px solid rgba(168, 85, 247, 0.1);
-            border-left-color: #a855f7; border-radius: 50%; animation: spin 1s linear infinite;
+        
+        /* Gradient Background */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                rgba(168, 85, 247, 0.1) 0%, 
+                rgba(255, 0, 128, 0.1) 25%, 
+                rgba(255, 165, 0, 0.1) 50%, 
+                rgba(0, 200, 255, 0.1) 75%, 
+                rgba(168, 85, 247, 0.1) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            z-index: -2;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Sidebar Styling */
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Glass Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Navbar */
+        .navbar-dark {
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+        }
+        
+        .brand-text {
+            background: linear-gradient(to right, #fff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Hamburger Menu */
+        .hamburger {
+            width: 30px;
+            height: 20px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background: white;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        
+        /* Sidebar */
         #sidebar {
-            position: fixed; top: 0; left: -320px; width: 300px; height: 100%;
-            background: linear-gradient(180deg, #111 0%, #000 100%); z-index: 100;
-            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 2px solid #a855f7;
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            max-width: 320px;
+            height: 100%;
+            background: rgba(15, 15, 20, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 1050;
+            transition: 0.4s ease;
+            border-right: 1px solid rgba(168,85,247,0.3);
+            overflow-y: auto;
         }
+        
         #sidebar.active { left: 0; }
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 90; backdrop-filter: blur(4px); }
+        
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1049;
+            display: none;
+            backdrop-filter: blur(3px);
+        }
+        
         .overlay.active { display: block; }
-
-        .brand-gradient { background: linear-gradient(90deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); transition: 0.3s; }
-        .glass-card:hover { border-color: rgba(168, 85, 247, 0.5); transform: translateY(-3px); }
+        
+        /* Download Button */
+        .download-btn {
+            background: linear-gradient(135deg, #a855f7, #7c3aed, #6d28d9);
+            border: none;
+            border-radius: 50px;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(168,85,247,0.4);
+        }
+        
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .download-btn:hover::before {
+            left: 100%;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(168,85,247,0.6);
+        }
+        
+        /* Error Animation */
+        .error-pulse {
+            animation: errorPulse 2s infinite;
+        }
+        
+        @keyframes errorPulse {
+            0%, 100% { 
+                color: #ff4757;
+                text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+            }
+            50% { 
+                color: #ff6b81;
+                text-shadow: 0 0 20px rgba(255, 107, 129, 0.7);
+            }
+        }
+        
+        /* File Info Card */
+        .file-info-card {
+            background: rgba(255,255,255,0.05);
+            border-left: 4px solid #a855f7;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .download-btn {
+                padding: 15px 30px;
+                font-size: 1.1rem;
+            }
+            
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .download-btn {
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+            
+            #sidebar {
+                max-width: 280px;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading-dots {
+            display: inline-block;
+        }
+        
+        .loading-dots span {
+            animation: dots 1.5s infinite;
+            opacity: 0;
+        }
+        
+        .loading-dots span:nth-child(2) { animation-delay: 0.5s; }
+        .loading-dots span:nth-child(3) { animation-delay: 1s; }
+        
+        @keyframes dots {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        
+        /* Social Icons */
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-3px);
+            background: rgba(168,85,247,0.2);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #a855f7, #7c3aed);
+            border-radius: 3px;
+            animation: progressPulse 2s infinite;
+        }
+        
+        @keyframes progressPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
+    <!-- Gradient Background -->
+    <div class="gradient-bg"></div>
+    
+    <!-- Overlay for Sidebar -->
     <div class="overlay" onclick="toggleSidebar()"></div>
 
-    <div id="sidebar" class="p-6 flex flex-col">
-        <div class="mb-10 text-center">
-            <img src="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-purple-500 p-1">
-            <h2 class="text-2xl font-extrabold brand-gradient">DOTXBRAIN</h2>
-            <p class="text-[10px] text-gray-500 tracking-tighter italic uppercase">"Your Gateway to Unlimited Entertainment"</p>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="p-4 h-100 d-flex flex-column">
+            <!-- Close Button -->
+            <div class="text-end mb-4">
+                <button class="btn btn-close btn-close-white" onclick="toggleSidebar()"></button>
+            </div>
+            
+            <!-- Logo -->
+            <div class="text-center mb-5">
+                <img src="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" 
+                     class="rounded-circle border border-3 border-purple-500 shadow-lg mb-3"
+                     style="width: 120px; height: 120px; object-fit: cover;">
+                <h2 class="brand-text fw-bold">DOTXBRAIN</h2>
+                <p class="text-muted small">Premium Streaming & Downloads</p>
+            </div>
+            
+            <!-- Social Links -->
+            <div class="mb-5">
+                <h5 class="text-white mb-3">Connect With Us</h5>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="https://t.me/dotxbrain_official" class="social-icon text-primary">
+                        <i class="fab fa-telegram fa-lg"></i>
+                    </a>
+                    <a href="https://youtube.com/@dotxbrain" class="social-icon text-danger">
+                        <i class="fab fa-youtube fa-lg"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Navigation Links -->
+            <div class="mb-auto">
+                <div class="list-group list-group-flush">
+                    <a href="https://t.me/dotxbrain_official" 
+                       class="list-group-item list-group-item-action bg-transparent text-white border-secondary">
+                        <i class="fab fa-telegram me-3"></i> Telegram Channel
+                    </a>
+                    <a href="https://youtube.com/@dotxbrain" 
+                       class="list-group-item list-group-item-action bg-transparent text-white border-secondary">
+                        <i class="fab fa-youtube me-3"></i> YouTube Channel
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="text-center text-muted small mt-4">
+                <p>v2.6.0 • Download Manager</p>
+            </div>
         </div>
-
-        <nav class="space-y-3 flex-1">
-            <a href="https://youtube.com/@dotxbrain" target="_blank" class="flex items-center gap-4 p-4 rounded-2xl bg-red-600/10 border border-red-600/20">
-                <i class="fab fa-youtube text-red-600 text-xl"></i>
-                <span class="font-bold">YouTube Hub</span>
-            </a>
-            <a href="https://t.me/dotxbrain_official" target="_blank" class="flex items-center gap-4 p-4 rounded-2xl bg-blue-600/10 border border-blue-600/20">
-                <i class="fab fa-telegram text-blue-500 text-xl"></i>
-                <span class="font-bold">Telegram Channel</span>
-            </a>
-        </nav>
     </div>
 
-    <nav class="px-6 py-4 flex justify-between items-center bg-black/40 backdrop-blur-xl border-b border-purple-500/20 sticky top-0 z-50">
-        <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-purple-600/10 flex items-center justify-center border border-purple-500/30">
-            <i class="fas fa-bars-staggered text-purple-400"></i>
-        </button>
-
-        <div class="absolute left-1/2 -translate-x-1/2 flex flex-col items-center cursor-pointer" onclick="toggleSidebar()">
-            <img src="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" class="w-11 h-11 rounded-full border-2 border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
-            <span class="text-[9px] font-black tracking-[0.2em] brand-gradient mt-1 uppercase">DOTXBRAIN</span>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <div class="d-flex align-items-center w-100">
+                <!-- Hamburger Menu -->
+                <div class="hamburger me-3" onclick="toggleSidebar()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                
+                <!-- Logo -->
+                <div class="d-flex align-items-center me-auto">
+                    <img src="https://raw.githubusercontent.com/guns26719-cell/Img/main/circle-cropped.png" 
+                         class="rounded-circle me-2" 
+                         style="width: 40px; height: 40px;">
+                    <span class="navbar-brand mb-0 h1 brand-text">DOTXBRAIN</span>
+                </div>
+                
+                <!-- VIP Button -->
+                <a href="https://t.me/dotxbrain_official" 
+                   class="btn btn-purple btn-sm px-3 py-2 rounded-pill">
+                    <i class="fas fa-crown me-1"></i> JOIN VIP
+                </a>
+            </div>
         </div>
-
-        <a href="https://t.me/dotxbrain_official" class="bg-purple-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase shadow-lg shadow-purple-500/20">Join</a>
     </nav>
 
-    <main class="max-w-4xl mx-auto px-4 py-8">
-        <div class="mb-6">
-            <div class="flex items-center gap-2 mb-2">
-                <span class="w-2 h-2 rounded-full bg-green-500 animate-ping"></span>
-                <span class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Download Ready</span>
-            </div>
-            <h1 id="file-title" class="text-xl font-extrabold text-gray-200 truncate leading-tight italic">Loading...</h1>
-        </div>
-
-        <div class="video-container shadow-2xl mb-8">
-            <div id="v-loader" class="video-loader">
-                <div class="text-center">
-                    <div class="spinner mx-auto mb-3"></div>
-                    <p class="text-[9px] font-black tracking-widest text-purple-400 uppercase">Fetching Content...</p>
+    <!-- Main Content -->
+    <main class="container py-5 mt-5">
+        <div class="row justify-content-center align-items-center min-vh-75">
+            <div class="col-lg-8 col-md-10 col-sm-12">
+                <!-- File Info Card -->
+                <div class="glass-card p-4 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-file-video text-purple me-3 fs-4"></i>
+                        <div>
+                            <h4 class="mb-0 text-truncate">{{file_name}}</h4>
+                            <small class="text-muted">Ready to download</small>
+                        </div>
+                    </div>
+                    
+                    <div class="file-info-card">
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-muted">File Type</small>
+                                <p class="mb-0"><i class="fas fa-film me-2"></i>Video File</p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Status</small>
+                                <p class="mb-0"><i class="fas fa-check-circle text-success me-2"></i>Available</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Bar (Simulated) -->
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+                
+                <!-- Download Button -->
+                <div class="text-center mb-5">
+                    <h1 class="error-pulse mb-4">
+                        <i class="fas fa-download me-2"></i>
+                        Download<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+                    </h1>
+                    
+                    <a href="{{file_url}}" class="download-btn mb-3" id="downloadLink">
+                        <i class="fas fa-download me-2"></i>
+                        DOWNLOAD NOW
+                    </a>
+                    
+                    <p class="text-muted mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Click the button above to start downloading. File will save to your device.
+                    </p>
+                </div>
+                
+                <!-- Error Message -->
+                <div class="glass-card p-4 text-center">
+                    <h5 class="error-pulse mb-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Download Error 404
+                    </h5>
+                    <p class="text-muted mb-0">
+                        If download doesn't start automatically, please check your internet connection or try again.
+                        {{file_name}}
+                    </p>
+                </div>
+                
+                <!-- Troubleshooting Tips -->
+                <div class="glass-card p-4 mt-4">
+                    <h6><i class="fas fa-wrench me-2"></i> Troubleshooting Tips</h6>
+                    <ul class="list-unstyled text-muted small">
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Ensure stable internet connection</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Check device storage space</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Use download manager for large files</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Contact support if issues persist</li>
+                    </ul>
                 </div>
             </div>
-            <video id="player" playsinline controls class="w-full h-full">
-                <source src="{{file_url}}" type="video/mp4">
-            </video>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <a href="{{file_url}}" class="glass-card p-6 rounded-3xl flex flex-col items-center gap-3 group">
-                <div class="w-14 h-14 bg-purple-600/20 rounded-2xl flex items-center justify-center group-hover:bg-purple-600/40 transition-all">
-                    <i class="fas fa-cloud-arrow-down text-2xl text-purple-400"></i>
-                </div>
-                <span class="font-black text-sm tracking-wide uppercase">Fast Download</span>
-                <p class="text-[9px] text-gray-500">Secure Direct Server</p>
-            </a>
-
-            <button onclick="copyLink()" class="glass-card p-6 rounded-3xl flex flex-col items-center gap-3 group">
-                <div class="w-14 h-14 bg-blue-600/20 rounded-2xl flex items-center justify-center group-hover:bg-blue-600/40 transition-all">
-                    <i class="fas fa-link text-2xl text-blue-400"></i>
-                </div>
-                <span class="font-black text-sm tracking-wide uppercase">Copy Link</span>
-                <p id="copy-status" class="text-[9px] text-gray-500">Click to Copy URL</p>
-            </button>
         </div>
     </main>
 
-    <footer class="mt-12 py-10 text-center border-t border-white/5 bg-black/50">
-        <h2 class="text-2xl font-black opacity-10 mb-1">DOTXBRAIN</h2>
-        <p class="text-[9px] text-gray-600 font-bold tracking-[0.4em] uppercase">Built for the future of streaming</p>
+    <!-- Footer -->
+    <footer class="py-4 border-top border-secondary mt-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Social Links -->
+                <div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
+                    <div class="d-flex justify-content-center justify-content-md-start gap-3">
+                        <a href="https://t.me/dotxbrain_official" class="social-icon text-primary">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                        <a href="https://youtube.com/@dotxbrain" class="social-icon text-danger">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Copyright -->
+                <div class="col-md-4 text-center mb-3 mb-md-0">
+                    <p class="mb-0 text-muted small">
+                        &copy; <span id="currentYear"></span> DOTXBRAIN
+                    </p>
+                    <p class="text-muted small">All Rights Reserved • Premium Streaming</p>
+                </div>
+                
+                <!-- Slogan -->
+                <div class="col-md-4 text-center text-md-end">
+                    <p class="mb-0 text-muted small">
+                        <i class="fas fa-heart text-danger"></i> Stream Without Limits
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Quotes -->
+            <div class="row mt-4">
+                <div class="col-md-6 text-center text-md-start mb-3">
+                    <div class="glass-card p-3">
+                        <p class="mb-0 small">
+                            <i class="fas fa-quote-left text-purple me-2"></i>
+                            Think & just code it...
+                            <i class="fas fa-quote-right text-purple ms-2"></i>
+                        </p>
+                        <small class="text-muted">- DOTXBRAIN</small>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="glass-card p-3">
+                        <p class="mb-0 small">
+                            <i class="fas fa-quote-left text-purple me-2"></i>
+                            Success is the journey of millions of failures and lots of hard work
+                            <i class="fas fa-quote-right text-purple ms-2"></i>
+                        </p>
+                        <small class="text-muted">- DOTXBRAIN</small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
 
-    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
+        // Sidebar Toggle
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.querySelector('.overlay').classList.toggle('active');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            // Prevent body scroll when sidebar is open
+            if (sidebar.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
         }
-
-        const video = document.getElementById('player');
-        const source = "{{file_url}}";
         
-        if (Hls.isSupported() && source.includes('.m3u8')) {
-            const hls = new Hls();
-            hls.loadSource(source);
-            hls.attachMedia(video);
-        }
-
-        const player = new Plyr('#player', {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen']
-        });
-
-        // Spinner logic
-        video.oncanplay = () => { document.getElementById('v-loader').style.display = 'none'; };
-
-        function copyLink() {
-            navigator.clipboard.writeText(source);
-            document.getElementById('copy-status').innerText = "COPIED TO CLIPBOARD!";
-            document.getElementById('copy-status').style.color = "#4ade80";
-            setTimeout(() => {
-                document.getElementById('copy-status').innerText = "Click to Copy URL";
-                document.getElementById('copy-status').style.color = "";
-            }, 2000);
-        }
-    </script>
-</body>
-</html>
-
+        // Set current year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Auto-start download after 2 seconds
+        setTimeout(() => {
+            const downloadLink = document.getElementById('downloadLink');
+            if (downloadLink) {
+                // For mobile devices, we'll trigger the download
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    window.location.href = downloadLink.href;
+                }
+            }
+        }, 2000);
+        
+        // Add download tracking
+        document.getElementById('downloadLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Preparing Download...';
+            this.disabled = true;
+            
+            // Simulate preparation time
+                                                                 
