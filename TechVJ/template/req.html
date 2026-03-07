@@ -532,6 +532,34 @@
                 margin: 1rem 0;
             }
         }
+
+        /* ========== NEW: DOUBLE-TAP RIPPLE EFFECT ========== */
+        .seek-ripple {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(168, 85, 247, 0.5);
+            border: 2px solid white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 20;
+            animation: ripple 0.5s ease-out forwards;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            backdrop-filter: blur(4px);
+        }
+
+        @keyframes ripple {
+            0% { opacity: 0.8; width: 40px; height: 40px; }
+            100% { opacity: 0; width: 150px; height: 150px; }
+        }
+        /* ========== END NEW RIPPLE ========== */
         
         /* UTILITY CLASSES */
         .text-truncate {
@@ -782,6 +810,7 @@
             const video = document.getElementById('player');
             
             // Initialize Plyr with mobile-friendly settings
+            // ========== NEW: Added 'pip' control and 'captions' to settings for audio tracks ==========
             player = new Plyr('#player', {
                 controls: [
                     'play-large',
@@ -790,9 +819,10 @@
                     'current-time',
                     'mute',
                     'settings',
+                    'pip',          // <-- Picture-in-Picture button
                     'fullscreen'
                 ],
-                settings: ['quality', 'speed'],
+                settings: ['captions', 'quality', 'speed'], // 'captions' enables audio track selection
                 speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
                 keyboard: { focused: true, global: true },
                 tooltips: { controls: true, seek: true },
@@ -815,6 +845,50 @@
                 console.error('Player error:', event.detail);
                 showToast('Playback error. Try downloading instead.', 'error');
             });
+
+            // ========== NEW: Double‑tap to seek 10s ==========
+            const container = document.querySelector('.video-container');
+            if (container) {
+                container.addEventListener('dblclick', function(e) {
+                    e.preventDefault();
+                    const rect = container.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const half = rect.width / 2;
+
+                    let seekBy = 0, direction = '';
+                    if (x < half) {
+                        seekBy = -10;      // left half -> backward
+                        direction = 'left';
+                    } else {
+                        seekBy = 10;        // right half -> forward
+                        direction = 'right';
+                    }
+
+                    // Apply seek
+                    if (player) player.currentTime += seekBy;
+                    else video.currentTime += seekBy;
+
+                    // Show ripple
+                    const ripple = document.createElement('div');
+                    ripple.className = 'seek-ripple';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.innerHTML = direction === 'left' ? '← 10s' : '10s →';
+                    container.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 500);
+
+                    // Optional toast (reuse existing toast)
+                    const toast = document.getElementById('toast');
+                    if (toast) {
+                        const msg = direction === 'left' ? '-10 seconds' : '+10 seconds';
+                        document.getElementById('toast-message').textContent = msg;
+                        toast.classList.add('show');
+                        setTimeout(() => toast.classList.remove('show'), 800);
+                    }
+                });
+            }
+            // ========== END NEW DOUBLE‑TAP ==========
         }
 
         // FIXED: Sidebar Functions - Now properly closes on overlay click
