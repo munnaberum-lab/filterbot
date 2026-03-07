@@ -809,8 +809,13 @@
         function initPlayer() {
             const video = document.getElementById('player');
             
+            // Ensure audio is not muted and volume is up
+            video.volume = 1.0;
+            video.muted = false;
+            
             // Initialize Plyr with mobile-friendly settings
             // ========== NEW: Added 'pip' control and 'captions' to settings for audio tracks ==========
+            // ========== FIX: Disable double-click fullscreen ==========
             player = new Plyr('#player', {
                 controls: [
                     'play-large',
@@ -827,7 +832,12 @@
                 keyboard: { focused: true, global: true },
                 tooltips: { controls: true, seek: true },
                 debug: false,
-                fullscreen: { enabled: true, fallback: true, iosNative: true },
+                fullscreen: { 
+                    enabled: true, 
+                    fallback: true, 
+                    iosNative: true,
+                    doubleClickToFullscreen: false  // <-- Prevents double‑click fullscreen toggle
+                },
                 ratio: '16:9',
                 autoplay: false,
                 clickToPlay: true,
@@ -846,11 +856,14 @@
                 showToast('Playback error. Try downloading instead.', 'error');
             });
 
-            // ========== NEW: Double‑tap to seek 10s ==========
+            // ========== NEW: Double‑tap to seek 10s (fullscreen now disabled in options) ==========
             const container = document.querySelector('.video-container');
             if (container) {
                 container.addEventListener('dblclick', function(e) {
+                    // Stop the event from any other handlers (though fullscreen is now off)
                     e.preventDefault();
+                    e.stopPropagation();
+                    
                     const rect = container.getBoundingClientRect();
                     const x = e.clientX - rect.left;
                     const y = e.clientY - rect.top;
