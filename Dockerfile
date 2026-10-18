@@ -1,16 +1,20 @@
-# Don't Remove Credit @VJ_Botz
-# Subscribe YouTube Channel For Amazing Bot @Tech_VJ
-# Ask Doubt on telegram @KingVJ01
-
 FROM python:3.10.8-slim-bullseye
 
-RUN apt update && apt upgrade -y
-RUN apt install git -y
-COPY requirements.txt /requirements.txt
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PORT=10000
 
-RUN cd /
+RUN apt update && apt install -y --no-install-recommends ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /dotxbrain-bot
+
+COPY requirements.txt .
 RUN pip3 install -U pip && pip3 install -U -r requirements.txt
-RUN mkdir /VJ-FILTER-BOT
-WORKDIR /VJ-FILTER-BOT
-COPY . /VJ-FILTER-BOT
-CMD ["python", "bot.py"]
+
+COPY . .
+
+EXPOSE 10000
+
+CMD ["python", "main.py"]
